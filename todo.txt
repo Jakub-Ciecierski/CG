@@ -16,3 +16,9 @@ Image filters
 2.3) sharpen
 2.4) edge detection
 2.5) emboss
+
+
+
+3) Editor - function filters
+
+display function curve
