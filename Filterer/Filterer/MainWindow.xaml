@@ -1,0 +1,42 @@
+﻿<Window x:Class="Filterer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Menu x:Name="mainMenu" Height="25" VerticalAlignment="Top">
+            <MenuItem Header="_File" >
+                <MenuItem x:Name="loadPicture" Header="Load picture" Click="loadButtonClick" />
+            </MenuItem>
+            <MenuItem Header="_Filters" >
+                <MenuItem x:Name="functionFilters" Header="Function filters" >
+                    <MenuItem x:Name="negetionFilter" Header="Negetion" Click="negationButtonClick">
+                    </MenuItem>    
+                </MenuItem>
+                <MenuItem x:Name="convolutionFilters" Header="Convolution filters" >
+                    <MenuItem x:Name="xFilter" Header="X" >
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="editor" Header="Function Filter Editor" Click="editorButtonClick">
+
+                </MenuItem>
+            </MenuItem>
+            
+        </Menu>
+
+
+
+        <Grid Margin="10,25,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition MinHeight="50" Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Image x:Name="originalImage" Grid.Column="0" Grid.Row="0" Margin="0,0,5,0" />
+            <Image x:Name="filteredImage" Grid.Column="1" Grid.Row="0" Margin="5,0,0,0" />
+        </Grid>
+    </Grid>
+
+</Window>
