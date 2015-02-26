@@ -40,7 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FunctionFilters.cs" />
+    <Compile Include="FunctionFilter.cs" />
+    <Compile Include="FunctionFilters\BrightnessFilter.cs" />
+    <Compile Include="FunctionFilters\ContrastFilter.cs" />
+    <Compile Include="FunctionFilters\CustomFilter.cs" />
+    <Compile Include="FunctionFilters\NegationFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

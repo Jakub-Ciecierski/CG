@@ -10,7 +10,9 @@
             <MenuItem Header="_Filters" >
                 <MenuItem x:Name="functionFilters" Header="Function filters" >
                     <MenuItem x:Name="negetionFilter" Header="Negetion" Click="negationButtonClick">
-                    </MenuItem>    
+                    </MenuItem>
+                    <MenuItem x:Name="brightnessFilter" Header="Brightness" Click="brightnessButtonClick">
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="convolutionFilters" Header="Convolution filters" >
                     <MenuItem x:Name="xFilter" Header="X" >

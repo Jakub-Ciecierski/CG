@@ -18,6 +18,8 @@ using Filter;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows.Threading;
+using Filter.FunctionFilters;
+using FilterGUI;
 
 namespace Filterer
 {
@@ -66,7 +68,8 @@ namespace Filterer
                 // TODO Background worker
                 new Thread(() =>
                 {
-                    imageHandler.ApplyFilter(image => FunctionFilters.Negation(image));
+                    NegationFilter negationFilter = new NegationFilter();
+                    imageHandler.ApplyFilter(image => negationFilter.ApplyFilter(image));
 
                     Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
                     {
@@ -78,8 +81,32 @@ namespace Filterer
             }
         }
 
+        private void brightnessButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    int a = -100;
+                    BrightnessFilter filter = new BrightnessFilter(a);
+                    imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(imageHandler.getFiltered());
+                    }));
+
+                }).Start();
+
+            }
+        }
+
         private void editorButtonClick(object sender, RoutedEventArgs e)
         {
+            EditorWindow editorWindow = new EditorWindow();
+            editorWindow.Show();
+            //this.Close();
         }
     }
 }
