@@ -18,10 +18,7 @@ namespace Filter.FunctionFilters
 
         private byte filterFunction(byte x)
         {
-            byte max = 255;
-            byte y = (byte)(max - x);
-
-            return y;
+            return x;
         }
 
         public override Bitmap ApplyFilter(Bitmap image)

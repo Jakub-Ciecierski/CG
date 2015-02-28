@@ -19,34 +19,48 @@ namespace FilterGUI
     /// </summary>
     public partial class EditorWindow : Window
     {
-        private Canvas plot;
-        private Ellipse yAxisPoint;
-        private Ellipse xAxisPoint;
+        private Canvas canvasPlot;
+        private Ellipse leftAxisPoint;
+        private Ellipse rightAxisPoint;
+
+        private Plot plot;
 
         public EditorWindow()
         {
             InitializeComponent();
 
-            plot = filterPlot;
-            yAxisPoint = new Ellipse();
-            xAxisPoint = new Ellipse();
+            canvasPlot = filterPlot;
+            leftAxisPoint = new Ellipse();
+            rightAxisPoint = new Ellipse();
+
+            canvasPlot.MouseRightButtonUp += plot_MouseRightButtonUp;
+
+            leftAxisPoint.MouseMove += leftAxisPoint_MouseLeftMove;
+            leftAxisPoint.MouseDown += leftAxisPoint_MouseLeftDown;
+            leftAxisPoint.MouseUp += leftAxisPoint_MouseLeftUp;
+
+            rightAxisPoint.MouseMove += rightAxisPoint_MouseLeftMove;
+            rightAxisPoint.MouseDown += rightAxisPoint_MouseLeftDown;
+            rightAxisPoint.MouseUp += rightAxisPoint_MouseLeftUp;
+
             drawPlot();
         }
 
         private void drawPlot()
         {
-            yAxisPoint.Stroke = SystemColors.WindowFrameBrush;
-            yAxisPoint.Width = 10;
-            yAxisPoint.Height = 10;
-            yAxisPoint.Fill = SystemColors.ActiveCaptionBrush;
+            leftAxisPoint.Stroke = Brushes.Red;
+            leftAxisPoint.Width = 10;
+            leftAxisPoint.Height = 10;
+            leftAxisPoint.Fill = Brushes.Red;
 
-            xAxisPoint.Stroke = SystemColors.WindowFrameBrush;
-            xAxisPoint.Width = 10;
-            xAxisPoint.Height = 10;
-            xAxisPoint.Fill = SystemColors.ActiveCaptionBrush;
+            rightAxisPoint.Stroke = Brushes.Red;
+            rightAxisPoint.Width = 10;
+            rightAxisPoint.Height = 10;
+            rightAxisPoint.Fill = Brushes.Red;
 
             Line yAxis = new Line();
-            yAxis.Stroke = SystemColors.WindowFrameBrush;
+            yAxis.Stroke = Brushes.Black;
+            
             yAxis.StrokeThickness = 1;
             yAxis.X1 = 0;
             yAxis.Y1 = 0;
@@ -54,14 +68,14 @@ namespace FilterGUI
             yAxis.Y2 = 255;
 
             Line xAxis = new Line();
-            xAxis.Stroke = SystemColors.WindowTextBrush;
+            xAxis.Stroke = Brushes.Black;
             xAxis.StrokeThickness = 1;
             xAxis.X1 = 0;
             xAxis.Y1 = 255;
             xAxis.X2 = 255;
             xAxis.Y2 = 255;
 
-            for (int i = 0; i < plot.Width; i+=5)
+            for (int i = 0; i < canvasPlot.Width; i+=5)
             {
                 Line gridLine1 = new Line();
                 Line gridLine2 = new Line();
@@ -85,34 +99,145 @@ namespace FilterGUI
                 gridLine2.X2 = 255;
                 gridLine2.Y2 = i;
 
-                plot.Children.Add(gridLine1);
-                plot.Children.Add(gridLine2);
+                canvasPlot.Children.Add(gridLine1);
+                canvasPlot.Children.Add(gridLine2);
             }
 
-            plot.Children.Add(yAxis);
-            plot.Children.Add(xAxis);
-            plot.Children.Add(yAxisPoint);
-            plot.Children.Add(xAxisPoint);
+            canvasPlot.Children.Add(yAxis);
+            canvasPlot.Children.Add(xAxis);
+            canvasPlot.Children.Add(leftAxisPoint);
+            canvasPlot.Children.Add(rightAxisPoint);
 
-            plot.Background = new SolidColorBrush(Colors.LightCyan);
+            canvasPlot.Background = new SolidColorBrush(Colors.LightCyan);
 
-            Canvas.SetTop(xAxisPoint,0);
-            Canvas.SetLeft(xAxisPoint,250);
+            Canvas.SetTop(rightAxisPoint,0);
+            Canvas.SetLeft(rightAxisPoint,255);
 
-            Canvas.SetTop(yAxisPoint, 250);
-            Canvas.SetLeft(yAxisPoint, -5);
+            Canvas.SetTop(leftAxisPoint, 255);
+            Canvas.SetLeft(leftAxisPoint, 0);
+
+            rightPointInfoBlock.Text = "0";
+            leftPointInfoBlock.Text = "255";
+
+            Line line = new Line();
+            line.X1 = 0;
+            line.Y1 = Canvas.GetTop(leftAxisPoint);
+
+            line.X2 = 255;
+            line.Y2 = Canvas.GetTop(rightAxisPoint);
+
+            line.Stroke = Brushes.Black;
+            line.StrokeThickness = 0.5;
+
+            plot = new Plot(leftAxisPoint, rightAxisPoint, line, canvasPlot);
+
+            canvasPlot.Children.Add(line);
         }
 
-        private void filterPlot_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        /****** Adding new Plot Points handler *******/
+        private void plot_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            Point currentPoint = e.GetPosition(filterPlot);
-            MessageBox.Show("x: " + currentPoint.X + " y: " + currentPoint.Y);
+            Point currentPoint = e.GetPosition(canvasPlot);
+
+            Ellipse newPoint = new Ellipse();
+            newPoint.Stroke = Brushes.Yellow;
+            newPoint.Width = 10;
+            newPoint.Height = 10;
+            newPoint.Fill = Brushes.Yellow;
+
+            canvasPlot.Children.Add(newPoint);
+
+            newPoint.MouseLeftButtonDown += plotPoint_MouseLeftDown;
+            newPoint.MouseLeftButtonUp += plotPoint_MouseLeftUp;
+            newPoint.MouseMove += plotPoint_MouseLeftMove;
+
+            Canvas.SetTop(newPoint, currentPoint.Y);
+            Canvas.SetLeft(newPoint, currentPoint.X);
+            plot.AddPoint(newPoint);
         }
 
-        private void filterPlot_MouseDown(object sender, MouseButtonEventArgs e)
+        /********** PlotPoint Mouse Handlers **********/
+        private void plotPoint_MouseLeftDown(object sender, MouseButtonEventArgs e)
         {
-            //Point currentPoint = e.GetPosition(filterPlot);
-            //MessageBox.Show("x: " + currentPoint.X + " y: " + currentPoint.Y);
+            Ellipse point = (Ellipse)sender;
+            point.CaptureMouse();
         }
+
+        private void plotPoint_MouseLeftUp(object sender, MouseButtonEventArgs e)
+        {
+            Ellipse point = (Ellipse)sender;
+            point.ReleaseMouseCapture();
+        }
+
+        private void plotPoint_MouseLeftMove(object sender, MouseEventArgs e)
+        {
+            Ellipse point = (Ellipse)sender;
+            if (point.IsMouseCaptured)
+            {
+                double x = e.GetPosition(canvasPlot).X;
+                double y = e.GetPosition(canvasPlot).Y;
+
+                plot.UpdatePoint(point, x, y);
+            }
+        }
+        /********** End of PlotPoint Mouse Handlers **********/
+
+
+        /********** Left AxisPoint Mouse Handlers **********/
+        private void leftAxisPoint_MouseLeftDown(object sender, MouseButtonEventArgs e)
+        {
+            leftAxisPoint.CaptureMouse();
+        }
+
+        private void leftAxisPoint_MouseLeftUp(object sender, MouseButtonEventArgs e)
+        {
+            leftAxisPoint.ReleaseMouseCapture();
+        }
+
+        private void leftAxisPoint_MouseLeftMove(object sender, MouseEventArgs e)
+        {
+            if (leftAxisPoint.IsMouseCaptured)
+            {
+                double position = e.GetPosition(canvasPlot).Y;
+                
+                if (position >= 0 && position <= 255)
+                {
+                    Canvas.SetTop(leftAxisPoint, e.GetPosition(canvasPlot).Y);
+                    leftPointInfoBlock.Text = position.ToString();
+
+                    plot.UpdateLeftPoint();
+                }
+            }
+        }
+        /********** End of Left AxisPoint Mouse Handlers **********/
+
+
+        /********** Right AxisPoint Mouse Handlers **********/
+        private void rightAxisPoint_MouseLeftDown(object sender, MouseButtonEventArgs e)
+        {
+            rightAxisPoint.CaptureMouse();
+        }
+
+        private void rightAxisPoint_MouseLeftUp(object sender, MouseButtonEventArgs e)
+        {
+            rightAxisPoint.ReleaseMouseCapture();
+        }
+
+        private void rightAxisPoint_MouseLeftMove(object sender, MouseEventArgs e)
+        {
+            if (rightAxisPoint.IsMouseCaptured)
+            {
+                double position = e.GetPosition(canvasPlot).Y;
+
+                if (position >= 0 && position <= 255)
+                {
+                    Canvas.SetTop(rightAxisPoint, e.GetPosition(canvasPlot).Y);
+                    rightPointInfoBlock.Text = position.ToString();
+                    plot.UpdateRightPoint();
+                }
+            }
+        }
+        /********** End of Right AxisPoint Mouse Handlers **********/
+
     }
 }
