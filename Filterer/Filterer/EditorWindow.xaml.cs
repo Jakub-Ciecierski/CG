@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Filterer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,8 +26,11 @@ namespace FilterGUI
 
         private Plot plot;
 
-        public EditorWindow()
+        private MainWindow mainWindow;
+
+        public EditorWindow(MainWindow mainWindow)
         {
+            this.mainWindow = mainWindow;
             InitializeComponent();
 
             canvasPlot = filterPlot;
@@ -116,8 +120,8 @@ namespace FilterGUI
             Canvas.SetTop(leftAxisPoint, 255);
             Canvas.SetLeft(leftAxisPoint, 0);
 
-            rightPointInfoBlock.Text = "0";
-            leftPointInfoBlock.Text = "255";
+            rightPointInfoBlock.Text = "255";
+            leftPointInfoBlock.Text = "0";
 
             Line line = new Line();
             line.X1 = 0;
@@ -203,7 +207,8 @@ namespace FilterGUI
                 if (position >= 0 && position <= 255)
                 {
                     Canvas.SetTop(leftAxisPoint, e.GetPosition(canvasPlot).Y);
-                    leftPointInfoBlock.Text = position.ToString();
+                    double actualPosition = 255 - position;
+                    leftPointInfoBlock.Text = actualPosition.ToString();
 
                     plot.UpdateLeftPoint();
                 }
@@ -232,12 +237,17 @@ namespace FilterGUI
                 if (position >= 0 && position <= 255)
                 {
                     Canvas.SetTop(rightAxisPoint, e.GetPosition(canvasPlot).Y);
-                    rightPointInfoBlock.Text = position.ToString();
+                    double actualPosition = 255 - position;
+                    rightPointInfoBlock.Text = actualPosition.ToString();
                     plot.UpdateRightPoint();
                 }
             }
         }
         /********** End of Right AxisPoint Mouse Handlers **********/
 
+        private void applyFilterButton(object sender, RoutedEventArgs e)
+        {
+            plot.ApplyFilter(mainWindow);
+        }
     }
 }

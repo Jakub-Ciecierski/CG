@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Filter.FunctionFilters;
+using Filterer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -186,6 +188,35 @@ namespace FilterGUI
         {
             Line line = lines.ElementAt(lines.Count - 1);
             line.Y2 = Canvas.GetTop(rightPoint);
+        }
+
+        public void ApplyFilter(MainWindow mainWindow)
+        {
+            List<byte> functionMapper = new List<byte>();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                Line line = lines.ElementAt(i);
+                int x0 = (int)line.X1;
+                int y0 = 255 - (int)line.Y1;
+
+                int x1 = (int)line.X2;
+                int y1 = 255 - (int)line.Y2;
+
+                int lengthX = x1 - x0;
+
+                for (int x = x0; x <= x1; x++)
+                {
+                    int y = y0 + (x - x0) * ((y1 - y0) / (x1 - x0));
+                    functionMapper.Add((byte)y);
+                }
+            }
+
+            CustomFilter filter = new CustomFilter(functionMapper);
+
+            mainWindow.imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+
+            mainWindow.filteredImage.Source = BitmapLoader.loadBitmap(mainWindow.imageHandler.getFiltered());
+
         }
     }
 }

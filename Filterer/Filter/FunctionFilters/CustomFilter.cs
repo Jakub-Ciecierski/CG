@@ -16,9 +16,14 @@ namespace Filter.FunctionFilters
             functionMapper = new List<byte>();
         }
 
+        public CustomFilter(List<byte> functionMapper)
+        {
+            this.functionMapper = functionMapper;
+        }
+
         private byte filterFunction(byte x)
         {
-            return x;
+            return functionMapper.ElementAt(x);
         }
 
         public override Bitmap ApplyFilter(Bitmap image)

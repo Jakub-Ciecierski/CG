@@ -8,6 +8,7 @@
                 />
         <TextBlock x:Name="leftPointInfoBlock" HorizontalAlignment="Left" Margin="10,260,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="22" Width="68"/>
         <TextBlock x:Name="rightPointInfoBlock" HorizontalAlignment="Left" Margin="247,260,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="22" Width="68"/>
+        <Button x:Name="applyFilter" Content="Apply filter" Click="applyFilterButton" HorizontalAlignment="Left" Margin="407,41,0,0" VerticalAlignment="Top" Width="75"/>
 
     </Grid>
 </Window>

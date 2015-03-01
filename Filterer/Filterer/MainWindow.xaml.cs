@@ -28,7 +28,7 @@ namespace Filterer
     /// </summary>
     public partial class MainWindow : Window
     {
-        ImageHandler imageHandler;
+        public ImageHandler imageHandler;
 
         public MainWindow()
         {
@@ -104,7 +104,7 @@ namespace Filterer
 
         private void editorButtonClick(object sender, RoutedEventArgs e)
         {
-            EditorWindow editorWindow = new EditorWindow();
+            EditorWindow editorWindow = new EditorWindow(this);
             editorWindow.Show();
             //this.Close();
         }
