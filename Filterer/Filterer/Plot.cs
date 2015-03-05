@@ -206,7 +206,13 @@ namespace FilterGUI
 
                 for (int x = x0; x <= x1; x++)
                 {
-                    int y = y0 + (x - x0) * ((y1 - y0) / (x1 - x0));
+                    double yDiff = y1 - y0;
+                    double xDiff = x1 - x0;
+                    double m = yDiff / xDiff;
+
+                    double diff = (x - x0);
+                    double d_y = y0 + diff * m;
+                    int y = (int)d_y;
                     functionMapper.Add((byte)y);
                 }
             }
