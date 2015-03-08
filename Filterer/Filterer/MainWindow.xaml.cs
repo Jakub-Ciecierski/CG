@@ -20,6 +20,7 @@ using System.Threading;
 using System.Windows.Threading;
 using Filter.FunctionFilters;
 using FilterGUI;
+using Filter.ConvolutionFilters;
 
 namespace Filterer
 {
@@ -59,6 +60,13 @@ namespace Filterer
                 originalImage.Source = BitmapLoader.loadBitmap(image);
                 filteredImage.Source = BitmapLoader.loadBitmap(image);
             }
+        }
+
+        private void editorButtonClick(object sender, RoutedEventArgs e)
+        {
+            EditorWindow editorWindow = new EditorWindow(this);
+            editorWindow.Show();
+            //this.Close();
         }
 
         private void negationButtonClick(object sender, RoutedEventArgs e)
@@ -102,11 +110,105 @@ namespace Filterer
             }
         }
 
-        private void editorButtonClick(object sender, RoutedEventArgs e)
+
+        private void blurFilter_Click(object sender, RoutedEventArgs e)
         {
-            EditorWindow editorWindow = new EditorWindow(this);
-            editorWindow.Show();
-            //this.Close();
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    BlurFilter filter = new BlurFilter();
+                    imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(imageHandler.getFiltered());
+                    }));
+
+                }).Start();
+
+            }
+        }
+
+        private void edgeDetectionFilter_Click(object sender, RoutedEventArgs e)
+        {
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    EdgeDetectionFilter filter = new EdgeDetectionFilter();
+                    imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(imageHandler.getFiltered());
+                    }));
+
+                }).Start();
+
+            }
+        }
+
+        private void embossFilter_Click(object sender, RoutedEventArgs e)
+        {
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    EmbossFilter filter = new EmbossFilter();
+                    imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(imageHandler.getFiltered());
+                    }));
+
+                }).Start();
+
+            }
+        }
+
+        private void gausianSmoothingFilter_Click(object sender, RoutedEventArgs e)
+        {
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    GausianSmoothingFilter filter = new GausianSmoothingFilter();
+                    imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(imageHandler.getFiltered());
+                    }));
+
+                }).Start();
+
+            }
+        }
+
+        private void sharpenFilter_Click(object sender, RoutedEventArgs e)
+        {
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    SharpenFilter filter = new SharpenFilter();
+                    imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(imageHandler.getFiltered());
+                    }));
+
+                }).Start();
+
+            }
         }
     }
 }

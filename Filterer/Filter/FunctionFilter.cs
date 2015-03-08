@@ -16,7 +16,7 @@ namespace Filter
     {
         abstract public Bitmap ApplyFilter(Bitmap image);
 
-        protected Bitmap applyFilter(Bitmap image, Func<byte, byte> filter)
+        protected Bitmap compute(Bitmap image, Func<byte, byte> filter)
         {
             Bitmap filteredImage = (Bitmap)image.Clone();
             for (int i = 0; i < filteredImage.Width; i++)

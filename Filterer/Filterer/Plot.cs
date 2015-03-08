@@ -202,9 +202,11 @@ namespace FilterGUI
                 int x1 = (int)line.X2;
                 int y1 = 255 - (int)line.Y2;
 
-                int lengthX = x1 - x0;
+                int length = x1;
+                if (i == lines.Count - 1)
+                    length++;
 
-                for (int x = x0; x <= x1; x++)
+                for (int x = x0; x < length; x++)
                 {
                     double yDiff = y1 - y0;
                     double xDiff = x1 - x0;

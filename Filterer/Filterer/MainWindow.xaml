@@ -14,9 +14,13 @@
                     <MenuItem x:Name="brightnessFilter" Header="Brightness" Click="brightnessButtonClick">
                     </MenuItem>
                 </MenuItem>
-                <MenuItem x:Name="convolutionFilters" Header="Convolution filters" >
-                    <MenuItem x:Name="xFilter" Header="X" >
-                    </MenuItem>
+                <MenuItem x:Name="convolutionFilters" Header="Convolution filters"  HorizontalAlignment="Left" Width="200" >
+                    <MenuItem x:Name="blurFilter" Header="Blur Filter" Click="blurFilter_Click" />
+                    <MenuItem x:Name="edgeDetectionFilter" Header="Edge Detection Filter" Click="edgeDetectionFilter_Click"/>
+                    <MenuItem x:Name="embossFilter" Header="Emboss Filter" Click="embossFilter_Click"/>
+                    <MenuItem x:Name="gausianSmoothingFilter" Header="Gausian Smoothing Filter" Click="gausianSmoothingFilter_Click" />
+                    <MenuItem x:Name="sharpenFilter" Header="Sharpen Filter" Click="sharpenFilter_Click"/>
+
                 </MenuItem>
                 <MenuItem x:Name="editor" Header="Function Filter Editor" Click="editorButtonClick">
 

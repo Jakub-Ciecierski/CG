@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,6 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvolutionFilter.cs" />
+    <Compile Include="ConvolutionFilters\BlurFilter.cs" />
+    <Compile Include="ConvolutionFilters\EdgeDetectionFilter.cs" />
+    <Compile Include="ConvolutionFilters\EmbossFilter.cs" />
+    <Compile Include="ConvolutionFilters\GausianSmoothingFilter.cs" />
+    <Compile Include="ConvolutionFilters\SharpenFilter.cs" />
     <Compile Include="FunctionFilter.cs" />
     <Compile Include="FunctionFilters\BrightnessFilter.cs" />
     <Compile Include="FunctionFilters\ContrastFilter.cs" />

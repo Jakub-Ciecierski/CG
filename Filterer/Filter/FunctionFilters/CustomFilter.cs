@@ -28,7 +28,7 @@ namespace Filter.FunctionFilters
 
         public override Bitmap ApplyFilter(Bitmap image)
         {
-            return applyFilter(image, filterFunction);
+            return compute(image, filterFunction);
         }
     }
 }
