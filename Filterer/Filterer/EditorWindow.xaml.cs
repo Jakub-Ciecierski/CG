@@ -278,10 +278,5 @@ namespace FilterGUI
             }
             
         }
-
-        private void drawBrightnessFilter()
-        {
-
-        }
     }
 }

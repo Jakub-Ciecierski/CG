@@ -253,11 +253,18 @@ namespace FilterGUI
                     {
                         double yDiff = y1 - y0;
                         double xDiff = x1 - x0;
-                        double m = yDiff / xDiff;
+                        int y;
+                        if (xDiff < 1)
+                            y = y0;
+                        else 
+                        {
+                        
+                            double m = yDiff / xDiff;
 
-                        double diff = (x - x0);
-                        double d_y = y0 + diff * m;
-                        int y = (int)d_y;
+                            double diff = (x - x0);
+                            double d_y = y0 + diff * m;
+                            y = (int)d_y;
+                        }
                         functionMapper.Add((byte)y);
                     }
                 }
@@ -303,9 +310,9 @@ namespace FilterGUI
         {
             this.Clear();
 
-            int a = 50;
-            Ellipse point1 = editor.CreatePoint(255, a);
-            Ellipse point2 = editor.CreatePoint(0, 255 - a);
+            int contrast = 50;
+            Ellipse point1 = editor.CreatePoint(255, contrast);
+            Ellipse point2 = editor.CreatePoint(0, 255 - contrast);
 
             AddPoint(point1);
             AddPoint(point2);

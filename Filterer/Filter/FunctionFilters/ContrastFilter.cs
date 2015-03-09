@@ -9,22 +9,26 @@ namespace Filter.FunctionFilters
 {
     public class ContrastFilter : FunctionFilter
     {
-        private int a;
+        private double contrast;
 
-        public ContrastFilter(int a)
+        public ContrastFilter(double contrast)
         {
-            if (a > 255)
-                a = 255;
-            if (a < -255)
-                a = -255;
-            this.a = a;
+            if (contrast < -100) contrast = -100;
+            if (contrast > 100) contrast = 100;
+            contrast = (100.0 + contrast) / 100.0;
+            contrast *= contrast;
+            this.contrast = contrast;
         }
         private byte filterFunction(byte x)
         {
             byte max = 255;
             byte min = 0;
-            
-            int y = (x + a);
+
+            double y = x / 255.0;
+            y -= 0.5;
+            y *= contrast;
+            y += 0.5;
+            y *= 255;
 
             y = (y > max) ? max : y;
             y = (y < min) ? min : y;

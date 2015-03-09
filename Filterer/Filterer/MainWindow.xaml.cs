@@ -110,6 +110,27 @@ namespace Filterer
             }
         }
 
+        private void contrastButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    int contrast = 50;
+                    ContrastFilter filter = new ContrastFilter(contrast);
+                    imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(imageHandler.getFiltered());
+                    }));
+
+                }).Start();
+
+            }
+        }
+        
 
         private void blurFilter_Click(object sender, RoutedEventArgs e)
         {

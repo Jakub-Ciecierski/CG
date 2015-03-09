@@ -9,10 +9,9 @@
             </MenuItem>
             <MenuItem Header="_Filters" >
                 <MenuItem x:Name="functionFilters" Header="Function filters" >
-                    <MenuItem x:Name="negetionFilter" Header="Negetion" Click="negationButtonClick">
-                    </MenuItem>
-                    <MenuItem x:Name="brightnessFilter" Header="Brightness" Click="brightnessButtonClick">
-                    </MenuItem>
+                    <MenuItem x:Name="negetionFilter" Header="Negetion" Click="negationButtonClick"/>
+                    <MenuItem x:Name="brightnessFilter" Header="Brightness" Click="brightnessButtonClick"/>
+                    <MenuItem x:Name="contrastFilter" Header="Contrast" Click="contrastButtonClick"/>
                 </MenuItem>
                 <MenuItem x:Name="convolutionFilters" Header="Convolution filters"  HorizontalAlignment="Left" Width="200" >
                     <MenuItem x:Name="blurFilter" Header="Blur Filter" Click="blurFilter_Click" />
