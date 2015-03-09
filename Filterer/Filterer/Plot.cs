@@ -22,7 +22,9 @@ namespace FilterGUI
 
         private Canvas canvasPlot;
 
-        public Plot(Ellipse leftPoint, Ellipse rightPoint, Line line, Canvas canvasPlot)
+        private EditorWindow editor;
+
+        public Plot(Ellipse leftPoint, Ellipse rightPoint, Line line, Canvas canvasPlot, EditorWindow editor)
         {
             this.leftPoint = leftPoint;
             this.rightPoint = rightPoint;
@@ -34,7 +36,46 @@ namespace FilterGUI
 
             this.canvasPlot = canvasPlot;
 
+            this.editor = editor;
+        }
 
+        public void Clear()
+        {
+            foreach (Line line in lines)
+            {
+                canvasPlot.Children.Remove(line);
+            }
+            lines = new List<Line>();
+
+            foreach(Ellipse point in points)
+            {
+                canvasPlot.Children.Remove(point);
+            }
+            points = new List<Ellipse>();
+
+            Canvas.SetTop(rightPoint, 0);
+            Canvas.SetLeft(rightPoint, 255);
+
+            Canvas.SetTop(leftPoint, 255);
+            Canvas.SetLeft(leftPoint, 0);
+
+            editor.rightPointInfoBlock.Text = "255";
+            editor.leftPointInfoBlock.Text = "0";
+
+            Line mainLine = new Line();
+            mainLine.X1 = 0;
+            mainLine.Y1 = Canvas.GetTop(leftPoint);
+
+            mainLine.X2 = 255;
+            mainLine.Y2 = Canvas.GetTop(rightPoint);
+
+            mainLine.Stroke = Brushes.Black;
+            mainLine.StrokeThickness = 0.5;
+
+            lines.Add(mainLine);
+
+            canvasPlot.Children.Add(mainLine);
+            
         }
 
         public Ellipse GetPointAt(int i)
@@ -192,39 +233,82 @@ namespace FilterGUI
 
         public void ApplyFilter(MainWindow mainWindow)
         {
-            List<byte> functionMapper = new List<byte>();
-            for (int i = 0; i < lines.Count; i++)
+            if(mainWindow.imageHandler != null)
             {
-                Line line = lines.ElementAt(i);
-                int x0 = (int)line.X1;
-                int y0 = 255 - (int)line.Y1;
-
-                int x1 = (int)line.X2;
-                int y1 = 255 - (int)line.Y2;
-
-                int length = x1;
-                if (i == lines.Count - 1)
-                    length++;
-
-                for (int x = x0; x < length; x++)
+                List<byte> functionMapper = new List<byte>();
+                for (int i = 0; i < lines.Count; i++)
                 {
-                    double yDiff = y1 - y0;
-                    double xDiff = x1 - x0;
-                    double m = yDiff / xDiff;
+                    Line line = lines.ElementAt(i);
+                    int x0 = (int)line.X1;
+                    int y0 = 255 - (int)line.Y1;
 
-                    double diff = (x - x0);
-                    double d_y = y0 + diff * m;
-                    int y = (int)d_y;
-                    functionMapper.Add((byte)y);
+                    int x1 = (int)line.X2;
+                    int y1 = 255 - (int)line.Y2;
+
+                    int length = x1;
+                    if (i == lines.Count - 1)
+                        length++;
+
+                    for (int x = x0; x < length; x++)
+                    {
+                        double yDiff = y1 - y0;
+                        double xDiff = x1 - x0;
+                        double m = yDiff / xDiff;
+
+                        double diff = (x - x0);
+                        double d_y = y0 + diff * m;
+                        int y = (int)d_y;
+                        functionMapper.Add((byte)y);
+                    }
                 }
+
+                CustomFilter filter = new CustomFilter(functionMapper);
+
+                mainWindow.imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+
+                mainWindow.filteredImage.Source = BitmapLoader.loadBitmap(mainWindow.imageHandler.getFiltered());
             }
 
-            CustomFilter filter = new CustomFilter(functionMapper);
+        }
 
-            mainWindow.imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+        public void DrawBrightnessFilter()
+        {
+            this.Clear();
 
-            mainWindow.filteredImage.Source = BitmapLoader.loadBitmap(mainWindow.imageHandler.getFiltered());
+            int a = 50;
+            Ellipse point1 = editor.CreatePoint(255, a);
+            Ellipse point2 = editor.CreatePoint(a , 255);
 
+            AddPoint(point1);
+            AddPoint(point2);
+        }
+        public void DrawNegationFilter()
+        {
+            this.Clear();
+
+            Canvas.SetTop(leftPoint, 0);
+            Canvas.SetLeft(leftPoint, 0);
+
+            Canvas.SetTop(rightPoint, 255);
+            Canvas.SetLeft(rightPoint, 255);
+
+            editor.rightPointInfoBlock.Text = "0";
+            editor.leftPointInfoBlock.Text = "255";
+
+            this.UpdateLeftPoint();
+            this.UpdateRightPoint();
+        }
+
+        public void DrawContrastFilter()
+        {
+            this.Clear();
+
+            int a = 50;
+            Ellipse point1 = editor.CreatePoint(255, a);
+            Ellipse point2 = editor.CreatePoint(0, 255 - a);
+
+            AddPoint(point1);
+            AddPoint(point2);
         }
     }
 }

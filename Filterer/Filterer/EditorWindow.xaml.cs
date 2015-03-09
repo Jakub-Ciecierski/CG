@@ -133,9 +133,31 @@ namespace FilterGUI
             line.Stroke = Brushes.Black;
             line.StrokeThickness = 0.5;
 
-            plot = new Plot(leftAxisPoint, rightAxisPoint, line, canvasPlot);
+            plot = new Plot(leftAxisPoint, rightAxisPoint, line, canvasPlot, this);
 
             canvasPlot.Children.Add(line);
+        }
+
+        public Ellipse CreatePoint(double x, double y) 
+        {
+            Ellipse point = new Ellipse();
+
+            point.Stroke = Brushes.Yellow;
+            point.Width = 10;
+            point.Height = 10;
+            point.Fill = Brushes.Yellow;
+
+            point.MouseLeftButtonDown += plotPoint_MouseLeftDown;
+            point.MouseLeftButtonUp += plotPoint_MouseLeftUp;
+            point.MouseMove += plotPoint_MouseLeftMove;
+
+
+            Canvas.SetTop(point, x);
+            Canvas.SetLeft(point, y);
+
+            canvasPlot.Children.Add(point);
+
+            return point;
         }
 
         /****** Adding new Plot Points handler *******/
@@ -143,20 +165,8 @@ namespace FilterGUI
         {
             Point currentPoint = e.GetPosition(canvasPlot);
 
-            Ellipse newPoint = new Ellipse();
-            newPoint.Stroke = Brushes.Yellow;
-            newPoint.Width = 10;
-            newPoint.Height = 10;
-            newPoint.Fill = Brushes.Yellow;
+            Ellipse newPoint = CreatePoint(currentPoint.Y, currentPoint.X);
 
-            canvasPlot.Children.Add(newPoint);
-
-            newPoint.MouseLeftButtonDown += plotPoint_MouseLeftDown;
-            newPoint.MouseLeftButtonUp += plotPoint_MouseLeftUp;
-            newPoint.MouseMove += plotPoint_MouseLeftMove;
-
-            Canvas.SetTop(newPoint, currentPoint.Y);
-            Canvas.SetLeft(newPoint, currentPoint.X);
             plot.AddPoint(newPoint);
         }
 
@@ -251,6 +261,25 @@ namespace FilterGUI
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            
+            if (plot != null) 
+            {
+                string filter = (e.AddedItems[0] as ComboBoxItem).Content.ToString();
+                if (filter.Equals("Brightness filter"))
+                    plot.DrawBrightnessFilter();
+                if (filter.Equals("Contrast filter"))
+                    plot.DrawContrastFilter();
+                if (filter.Equals("Negation filter"))
+                    plot.DrawNegationFilter();
+                if (filter.Equals("Custom filter"))
+                    plot.Clear();
+            }
+            
+        }
+
+        private void drawBrightnessFilter()
         {
 
         }
