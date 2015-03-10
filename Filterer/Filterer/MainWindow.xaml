@@ -12,6 +12,7 @@
                     <MenuItem x:Name="negetionFilter" Header="Negetion" Click="negationButtonClick"/>
                     <MenuItem x:Name="brightnessFilter" Header="Brightness" Click="brightnessButtonClick"/>
                     <MenuItem x:Name="contrastFilter" Header="Contrast" Click="contrastButtonClick"/>
+                    <MenuItem x:Name="gammaCorrectionFilter" Header="Gamma Correction" Click="gammaCorrectionButtonClick"/>
                 </MenuItem>
                 <MenuItem x:Name="convolutionFilters" Header="Convolution filters"  HorizontalAlignment="Left" Width="200" >
                     <MenuItem x:Name="blurFilter" Header="Blur Filter" Click="blurFilter_Click" />
@@ -37,10 +38,12 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition MinHeight="50" Height="Auto" />
+                <RowDefinition MinHeight="5" Height="Auto" />
             </Grid.RowDefinitions>
 
             <Image x:Name="originalImage" Grid.Column="0" Grid.Row="0" Margin="0,0,5,0" />
             <Image x:Name="filteredImage" Grid.Column="1" Grid.Row="0" Margin="5,0,0,0" />
+            <TextBox x:Name="gammaTextBox" Grid.Column="1" Height="23" Margin="129,262,0,-233" TextWrapping="Wrap" Text="1" Width="120" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         </Grid>
     </Grid>
 

@@ -51,6 +51,7 @@
     <Compile Include="FunctionFilters\BrightnessFilter.cs" />
     <Compile Include="FunctionFilters\ContrastFilter.cs" />
     <Compile Include="FunctionFilters\CustomFilter.cs" />
+    <Compile Include="FunctionFilters\GammaCorrectionFilter.cs" />
     <Compile Include="FunctionFilters\NegationFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

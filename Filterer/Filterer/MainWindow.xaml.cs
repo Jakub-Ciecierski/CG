@@ -130,8 +130,34 @@ namespace Filterer
 
             }
         }
-        
 
+        private void gammaCorrectionButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    double gamma = 1;
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        gamma = Convert.ToDouble(gammaTextBox.Text);
+                    }));
+                    
+                    GammaCorrectionFilter filter = new GammaCorrectionFilter(gamma, 1);
+                    imageHandler.ApplyFilter(image => filter.ApplyFilter(image));
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(imageHandler.getFiltered());
+                    }));
+
+                }).Start();
+
+            }
+        }
+
+       
         private void blurFilter_Click(object sender, RoutedEventArgs e)
         {
             if (imageHandler != null)

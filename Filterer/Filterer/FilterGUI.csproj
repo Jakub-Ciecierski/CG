@@ -119,7 +119,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="samples\abstract.jpg" />
-    <Resource Include="samples\img.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="samples\dark_ages.jpg" />
