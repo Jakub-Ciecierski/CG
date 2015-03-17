@@ -112,6 +112,10 @@
     <Resource Include="samples\sunflower.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dither\Dither.csproj">
+      <Project>{5f290cf7-d6df-471c-ab13-a72d55872137}</Project>
+      <Name>Dither</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Filter\Filter.csproj">
       <Project>{9f4f4a66-5a8f-4f44-9d4f-0d211eb8758c}</Project>
       <Name>Filter</Name>

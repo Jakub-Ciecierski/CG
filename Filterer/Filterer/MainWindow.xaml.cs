@@ -21,6 +21,7 @@ using System.Windows.Threading;
 using Filter.FunctionFilters;
 using FilterGUI;
 using Filter.ConvolutionFilters;
+using Dither;
 
 namespace Filterer
 {
@@ -251,6 +252,27 @@ namespace Filterer
                     Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
                     {
                         filteredImage.Source = BitmapLoader.loadBitmap(imageHandler.getFiltered());
+                    }));
+
+                }).Start();
+
+            }
+        }
+
+        private void threshHoldingButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    int threshhold = 170;
+                    TreshHolding threshHolder = new TreshHolding(threshhold);
+                    Bitmap filtered = threshHolder.ApplyDithering(imageHandler.getOriginal());
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(filtered);
                     }));
 
                 }).Start();

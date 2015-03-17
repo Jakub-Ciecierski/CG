@@ -8,6 +8,9 @@
                 <MenuItem x:Name="loadPicture" Header="Load picture" Click="loadButtonClick" />
             </MenuItem>
             <MenuItem Header="_Filters" >
+                <MenuItem x:Name="dithering" Header="Dithering" >
+                    <MenuItem x:Name="threshHolding" Header="ThreshHolding" Click="threshHoldingButtonClick"/>
+                </MenuItem>
                 <MenuItem x:Name="functionFilters" Header="Function filters" >
                     <MenuItem x:Name="negetionFilter" Header="Negetion" Click="negationButtonClick"/>
                     <MenuItem x:Name="brightnessFilter" Header="Brightness" Click="brightnessButtonClick"/>
