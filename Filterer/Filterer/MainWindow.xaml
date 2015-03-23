@@ -8,9 +8,6 @@
                 <MenuItem x:Name="loadPicture" Header="Load picture" Click="loadButtonClick" />
             </MenuItem>
             <MenuItem Header="_Filters" >
-                <MenuItem x:Name="dithering" Header="Dithering" >
-                    <MenuItem x:Name="threshHolding" Header="ThreshHolding" Click="threshHoldingButtonClick"/>
-                </MenuItem>
                 <MenuItem x:Name="functionFilters" Header="Function filters" >
                     <MenuItem x:Name="negetionFilter" Header="Negetion" Click="negationButtonClick"/>
                     <MenuItem x:Name="brightnessFilter" Header="Brightness" Click="brightnessButtonClick"/>
@@ -32,7 +29,10 @@
             <MenuItem Header="_Quantization" >
                 <MenuItem x:Name="medianCut" Header="Median Cut" Click="medianCutClick" />
             </MenuItem>
-            
+            <MenuItem x:Name="dithering" Header="Dithering" >
+                <MenuItem x:Name="thresholding" Header="Thresholding" Click="thresholdingButtonClick"/>
+                <MenuItem x:Name="average" Header="Average" Click="averageDitherButtonClick"/>
+            </MenuItem>
         </Menu>
 
 

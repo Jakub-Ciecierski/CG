@@ -260,7 +260,7 @@ namespace Filterer
             }
         }
 
-        private void threshHoldingButtonClick(object sender, RoutedEventArgs e)
+        private void thresholdingButtonClick(object sender, RoutedEventArgs e)
         {
             if (imageHandler != null)
             {
@@ -268,7 +268,7 @@ namespace Filterer
                 new Thread(() =>
                 {
                     int threshhold = 170;
-                    TreshHolding threshHolder = new TreshHolding(threshhold);
+                    Thresholding threshHolder = new Thresholding(threshhold);
                     Bitmap filtered = threshHolder.ApplyDithering(imageHandler.getOriginal());
 
                     Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
@@ -295,6 +295,28 @@ namespace Filterer
                     Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
                     {
                         filteredImage.Source = BitmapLoader.loadBitmap(medianCut.Image);
+                    }));
+                    Console.Write("Median Cut finished \n");
+                }).Start();
+
+            }
+        }
+
+        private void averageDitherButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    int k = 8;
+                    
+                    AverageDither dither = new AverageDither(k);
+                    Bitmap filtered = dither.ApplyDithering(imageHandler.getOriginal());
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(filtered);
                     }));
                     Console.Write("Median Cut finished \n");
                 }).Start();

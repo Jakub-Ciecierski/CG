@@ -10,19 +10,19 @@ namespace Dither
     /*
      * average dithering & median -cut CQ
      */
-    public class TreshHolding
+    public class Thresholding
     {
-        private int threshHold;
+        private int threshold;
 
-        public TreshHolding(int threshHold)
+        public Thresholding(int threshHold)
         {
-            this.threshHold = threshHold;
+            this.threshold = threshHold;
         }
 
         private byte threshHoldFunction(byte x)
         {
             byte y = 0;
-            if (x > threshHold)
+            if (x > threshold)
                 y = 255;
             else
                 y = 0;
