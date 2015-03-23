@@ -112,6 +112,10 @@
     <Resource Include="samples\sunflower.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ColorQuantization\ColorQuantization.csproj">
+      <Project>{a855a790-5071-409f-ba0c-1cc2d61d59bf}</Project>
+      <Name>ColorQuantization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dither\Dither.csproj">
       <Project>{5f290cf7-d6df-471c-ab13-a72d55872137}</Project>
       <Name>Dither</Name>

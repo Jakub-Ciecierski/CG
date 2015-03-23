@@ -29,6 +29,9 @@
 
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="_Quantization" >
+                <MenuItem x:Name="medianCut" Header="Median Cut" Click="medianCutClick" />
+            </MenuItem>
             
         </Menu>
 

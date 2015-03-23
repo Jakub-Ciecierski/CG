@@ -22,6 +22,7 @@ using Filter.FunctionFilters;
 using FilterGUI;
 using Filter.ConvolutionFilters;
 using Dither;
+using ColorQuantization.MedianCut;
 
 namespace Filterer
 {
@@ -275,6 +276,27 @@ namespace Filterer
                         filteredImage.Source = BitmapLoader.loadBitmap(filtered);
                     }));
 
+                }).Start();
+
+            }
+        }
+
+        private void medianCutClick(object sender, RoutedEventArgs e)
+        {
+            if (imageHandler != null)
+            {
+                // TODO Background worker
+                new Thread(() =>
+                {
+                    int k = 8;
+                    MedianCut medianCut = new MedianCut(imageHandler.getOriginal());
+                    medianCut.Compute(k);
+
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    {
+                        filteredImage.Source = BitmapLoader.loadBitmap(medianCut.Image);
+                    }));
+                    Console.Write("Median Cut finished \n");
                 }).Start();
 
             }
