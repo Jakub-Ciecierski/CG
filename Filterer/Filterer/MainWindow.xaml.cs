@@ -288,7 +288,7 @@ namespace Filterer
                 // TODO Background worker
                 new Thread(() =>
                 {
-                    int k = 8;
+                    int k = 2;
                     MedianCut medianCut = new MedianCut(imageHandler.getOriginal());
                     medianCut.Compute(k);
 
@@ -309,7 +309,7 @@ namespace Filterer
                 // TODO Background worker
                 new Thread(() =>
                 {
-                    int k = 8;
+                    int k = 2;
                     
                     AverageDither dither = new AverageDither(k);
                     Bitmap filtered = dither.ApplyDithering(imageHandler.getOriginal());

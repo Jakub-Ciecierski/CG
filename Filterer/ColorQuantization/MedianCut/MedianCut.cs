@@ -34,7 +34,7 @@ namespace ColorQuantization.MedianCut
         }
 
         /// <summary>
-        /// Compute the coloir palette with k colors
+        /// Compute the color palette with k colors
         /// </summary>
         /// <param name="k">
         ///     Number of colors
