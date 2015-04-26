@@ -9,40 +9,57 @@ namespace Dither
 {
     public class AverageDither
     {
-        private int threshold;
         private int k;
+
+        private byte[] threshold;
 
         public AverageDither(int k)
         {
             this.k = k;
+
+            threshold = new byte[k - 1];
         }
 
         private void computeThreshold(Bitmap image)
         {
-            int threshold = 0;
-            int count = 0;
+            int[] sum;
+            int[] pixelCount;
+
+            sum = new int[k - 1];
+            pixelCount = new int[k - 1];
+
             for (int i = 0; i < image.Width; i++)
             {
                 for (int j = 0; j < image.Height; j++)
                 {
                     Color color = image.GetPixel(i, j);
-                    
-                    threshold += color.R;
-                    count++;
+
+                    int thresholdIndex = color.R * (k - 1) / 256;
+                    sum[thresholdIndex] += color.R;
+                    pixelCount[thresholdIndex]++;
                 }
             }
-            this.threshold = threshold / count;
-            Console.Write("computeThreshold(): " + this.threshold + "\n");
+            for (int i = 0; i < k - 1; i++) 
+            {
+                threshold[i] = (byte)(sum[i] / pixelCount[i]);
+            }
         }
 
         private byte threshHoldFunction(byte x)
         {
-            byte y = 0;
-            if (x > threshold)
-                y = 255;
+            int thresholdIndex = (x * (k - 1)) / 256;
+
+            if (x >= threshold[thresholdIndex])
+            {
+                int t = (int)(((double)(thresholdIndex +1 )/ (k - 1)) * 255);
+                return (byte)t;
+            }
             else
-                y = 0;
-            return y;
+            {
+                int t = (int)(((double)(thresholdIndex )  / (k - 1)) * 255);
+                return (byte)t;
+            }
+            
         }
 
         protected Bitmap compute(Bitmap image)
