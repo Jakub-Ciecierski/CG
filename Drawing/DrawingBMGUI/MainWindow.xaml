@@ -1,0 +1,29 @@
+﻿<Window x:Class="DrawingBMGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*"  />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Image x:Name="mainBitmap" Grid.Column="0" Height="Auto" Width="Auto"/>
+        
+        <Canvas Background="DarkGray" Grid.Column="1" >
+
+        </Canvas>
+        <!---
+        <ComboBox Canvas.Top="93" Width="64"  Canvas.Left="10" Grid.Column="1" Margin="5,86,5,206" DropDownClosed="ComboBox_DropDownClosed" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ComboBoxItem x:Name="thickness1" IsSelected="True">1</ComboBoxItem>
+            <ComboBoxItem >3</ComboBoxItem>
+            <ComboBoxItem >5</ComboBoxItem>
+            <ComboBoxItem >7</ComboBoxItem>
+        </ComboBox>
+        
+        <Button x:Name="lineButton" Content="Line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="59" Grid.Column="1" Click="lineButton_Click"/>
+        <Button x:Name="circleButton" Content="Circle" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="59" Grid.Column="1" Click="circleButton_Click"/>
+        -->
+    </Grid>
+</Window>
