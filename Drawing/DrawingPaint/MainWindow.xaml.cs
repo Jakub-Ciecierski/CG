@@ -63,10 +63,15 @@ namespace DrawingPaint
 
         List<Edge> polygon = new List<Edge>();
 
+        bool doFloodFill = false;
+        FloodFill floodFiller;
+
         public MainWindow()
         {
             InitializeComponent();
             paintBitmap = new PaintBitmap(gridWidth, gridHeight, paintImage);
+
+            floodFiller = new FloodFill(paintBitmap, paintBitmap.PutPixel);
 
             drawer = new Drawer(1);
         }
@@ -148,6 +153,11 @@ namespace DrawingPaint
             polygon = new List<Edge>();
         }
 
+        private void floodFillButton_Click(object sender, RoutedEventArgs e)
+        {
+            doFloodFill = !doFloodFill;
+        }
+
         private void ComboBox_DropDownClosed(object sender, EventArgs e)
         {
             ComboBox box = sender as ComboBox;
@@ -157,9 +167,23 @@ namespace DrawingPaint
 
         private void automatonImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            point1 = e.GetPosition(e.Source as FrameworkElement);
-            //paintBitmap.PutPixel((int)point1.X, (int)point1.Y);
-            //MessageBox.Show("X: " + point1.X + " Y: " + point1.Y);
+            if (doFloodFill)
+            {
+                System.Windows.Point point = e.GetPosition(e.Source as FrameworkElement);
+                int x = (int)point.X;
+                int y = (int)point.Y;
+
+                floodFiller.Fill(x, y, paintBitmap.GetColor(x,y), paintBitmap.BRUSH_COLOR);
+            }
+            else 
+            { 
+                point1 = e.GetPosition(e.Source as FrameworkElement);
+                //paintBitmap.PutPixel((int)point1.X, (int)point1.Y);
+                //System.Drawing.Color c = paintBitmap.GetColor((int)point1.X, (int)point1.Y);
+                //MessageBox.Show("R: " + c.R + " G: " + c.G + " B: " + c.B);
+                //paintBitmap.PutPixel((int)point1.X, (int)point1.Y);
+                //MessageBox.Show("X: " + point1.X + " Y: " + point1.Y);
+            }
         }
 
 

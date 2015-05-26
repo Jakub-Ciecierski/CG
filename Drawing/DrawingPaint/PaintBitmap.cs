@@ -26,9 +26,9 @@ namespace DrawingPaint
         /// </summary>
         private System.Drawing.Color NEST_COLOR = System.Drawing.Color.FromArgb(200, 20, 20);
 
-        private System.Drawing.Color BACKGROUND_COLOR = System.Drawing.Color.FromArgb(255, 255, 255);
+        public System.Drawing.Color BACKGROUND_COLOR = System.Drawing.Color.FromArgb(255, 255, 255);
 
-        private System.Drawing.Color BRUSH_COLOR = System.Drawing.Color.FromArgb(0, 0, 0);
+        public System.Drawing.Color BRUSH_COLOR = System.Drawing.Color.FromArgb(0, 0, 0);
 
         /// <summary>
         ///     Dimensions of a cell in pixels
@@ -146,6 +146,37 @@ namespace DrawingPaint
         /************************* PUBLIC METHODS **************************/
         /*******************************************************************/
 
+        public unsafe System.Drawing.Color GetColor(int i, int j)
+        {
+            int width = wBitmap.PixelWidth;
+            int height = wBitmap.PixelHeight;
+
+            double actualWidth = imageDest.ActualWidth;
+            double actualHeight = imageDest.ActualHeight;
+
+            double scaleWidth = actualWidth / width;
+            double scaleHeight = actualHeight / height;
+
+            // scalled pixel indecies image
+            int indexI = (int)(j / scaleWidth);
+            int indexJ = (int)(i / scaleHeight);
+
+            wBitmap.Lock();
+            byte* pImgData = (byte*)wBitmap.BackBuffer;
+
+            Int32Rect rect = new Int32Rect(indexJ, indexI, 1, 1);
+
+            byte* pixel = pImgData +
+                                (stride * indexI) +
+                                ((indexJ * bytesPerPixel));
+            System.Drawing.Color c;
+            c = System.Drawing.Color.FromArgb(pixel[0], pixel[1], pixel[2]);
+
+            wBitmap.Unlock();
+
+            return c;
+        }
+
         public unsafe void PutPixel(int i, int j)
         {
             int width = wBitmap.PixelWidth;
@@ -188,6 +219,46 @@ namespace DrawingPaint
             wBitmap.Unlock();
         }
 
+        public unsafe void PutPixel(int i, int j, System.Drawing.Color c)
+        {
+            int width = wBitmap.PixelWidth;
+            int height = wBitmap.PixelHeight;
+
+            double actualWidth = imageDest.ActualWidth;
+            double actualHeight = imageDest.ActualHeight;
+
+            double scaleWidth = actualWidth / width;
+            double scaleHeight = actualHeight / height;
+
+            // scalled pixel indecies image
+            int indexI = (int)(j / scaleWidth);
+            int indexJ = (int)(i / scaleHeight);
+
+            wBitmap.Lock();
+            byte* pImgData = (byte*)wBitmap.BackBuffer;
+
+            Int32Rect rect = new Int32Rect(indexJ, indexI, 1, 1);
+
+            byte* pixel = pImgData +
+                                (stride * indexI) +
+                                ((indexJ * bytesPerPixel));
+
+            try
+            {
+                // color the bitmap
+                pixel[0] = c.R;
+                pixel[1] = c.G;
+                pixel[2] = c.B;
+            }
+            catch (AccessViolationException e) { Console.Write(e.StackTrace); }
+
+            try
+            {
+                wBitmap.AddDirtyRect(rect);
+            }
+            catch (ArgumentException e) { Console.Write(e.StackTrace); }
+            wBitmap.Unlock();
+        }
      
         /// <summary>
         ///     Takes point from the image

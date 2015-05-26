@@ -485,7 +485,7 @@
 
                         <Button x:Name="lineButton" Content="Line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="59" Grid.Column="1" Click="lineButton_Click"/>
                         <Button x:Name="circleButton" Content="Circle" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="59" Grid.Column="1" Click="circleButton_Click"/>
-                        <Button x:Name="fillButton" Content="Fill" HorizontalAlignment="Left" Margin="10,148,0,0" VerticalAlignment="Top" Width="59" Click="fillButton_Click"/>
+                        <Button x:Name="fillButton" Content="Fill" HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top" Width="59" Click="fillButton_Click"/>
 
                         <ComboBox Canvas.Top="93" Width="64"  Canvas.Left="10" Grid.Column="1" Margin="5,86,5,206" DropDownClosed="ComboBox_DropDownClosed" HorizontalAlignment="Left" VerticalAlignment="Top">
                             <ComboBoxItem x:Name="thickness1" IsSelected="True">1</ComboBoxItem>
@@ -493,6 +493,7 @@
                             <ComboBoxItem >5</ComboBoxItem>
                             <ComboBoxItem >7</ComboBoxItem>
                         </ComboBox>
+                        <Button x:Name="floodFillButton" Content="Flood Fill" HorizontalAlignment="Left" Margin="10,199,0,0" VerticalAlignment="Top" Width="59" Click="floodFillButton_Click"/>
 
                     </Grid>
 
