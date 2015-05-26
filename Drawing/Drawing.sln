@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drawing", "Drawing\Drawing.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawingGUI", "DrawingGUI\DrawingGUI.csproj", "{0BA5C376-2EA6-4858-92DC-42505DA5E8EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawingPaint", "DrawingPaint\DrawingPaint.csproj", "{FC1017DA-1395-40E5-BCF7-83C35B5EAEC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0BA5C376-2EA6-4858-92DC-42505DA5E8EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BA5C376-2EA6-4858-92DC-42505DA5E8EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BA5C376-2EA6-4858-92DC-42505DA5E8EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC1017DA-1395-40E5-BCF7-83C35B5EAEC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC1017DA-1395-40E5-BCF7-83C35B5EAEC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC1017DA-1395-40E5-BCF7-83C35B5EAEC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC1017DA-1395-40E5-BCF7-83C35B5EAEC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

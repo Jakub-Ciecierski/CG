@@ -39,6 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Filling\Edge.cs" />
+    <Compile Include="Filling\ScanlineFilling.cs" />
+    <Compile Include="Filling\ScanlineFilling2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drawer.cs" />
   </ItemGroup>
