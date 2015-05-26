@@ -50,7 +50,7 @@ namespace Drawing.Filling
 
                 fillScanline(y, AET);
 
-                updateActiveEdgeTable(y, AET);
+                AET = updateActiveEdgeTable(y, AET);
 
                 y++;
             }
@@ -175,17 +175,33 @@ namespace Drawing.Filling
             }*/
         }
 
-        private void updateActiveEdgeTable(int y, List<Edge> AET) 
+        private List<Edge> updateActiveEdgeTable(int y, List<Edge> AET) 
         {
             // remove from AET edges for which ymax = y
-            for (int i = 0; i < AET.Count; i++)
+            int[] to_remove = new int[AET.Count];
+            int count = AET.Count;
+
+            for (int i = 0; i < count; i++)
             {
                 // update x
                 AET[i].curr_x += AET[i].d_m;
 
-                if (y >= AET[i].max_y)
-                    AET.RemoveAt(i);
+                if (y+1 == AET[i].max_y)
+                {
+                    to_remove[i] = 1;
+                }
             }
+
+            List<Edge> newAET = new List<Edge>();
+            for (int i = 0; i < count; i++)
+            {
+                if (to_remove[i] != 1)
+                {
+                    newAET.Add(AET[i]);
+                }
+            }
+            return newAET;
+
         }
 
     }

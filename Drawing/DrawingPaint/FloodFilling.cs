@@ -33,37 +33,21 @@ namespace DrawingPaint
 
                 if (equalColor(currentColor, originalColor))
                 {
-                    PutPixel(x, y, fillColor);
-                }
+                    paintBitmap.PutPixel((int)p.X, (int)p.Y, fillColor);
+                    if (paintBitmap.GetColor((int)p.X, (int)p.Y) != fillColor)
+                        Console.Write("");
 
-                // ADD 4 NEIGHBORS
+                    // ADD 4 NEIGHBORS
+                    System.Windows.Point pointToAdd = new System.Windows.Point(p.X - 1, p.Y);
+                        queue.Enqueue(pointToAdd);
+                    pointToAdd = new System.Windows.Point(p.X + 1, p.Y);
+                        queue.Enqueue(pointToAdd);
 
-                System.Windows.Point pointToAdd = new System.Windows.Point(p.X - 1, p.Y);
-                Color nbColor = paintBitmap.GetColor((int)p.X - 1, (int)p.Y);
-                if (equalColor(nbColor, originalColor))
-                {
-                    queue.Enqueue(pointToAdd);
-                }
+                    pointToAdd = new System.Windows.Point(p.X, p.Y - 1);
+                        queue.Enqueue(pointToAdd);
 
-                pointToAdd = new System.Windows.Point(p.X + 1, p.Y);
-                nbColor = paintBitmap.GetColor((int)p.X + 1, (int)p.Y);
-                if (equalColor(nbColor, originalColor))
-                {
-                    queue.Enqueue(pointToAdd);
-                }
-
-                pointToAdd = new System.Windows.Point(p.X, p.Y - 1);
-                nbColor = paintBitmap.GetColor((int)p.X, (int)p.Y - 1);
-                if (equalColor(nbColor, originalColor))
-                {
-                    queue.Enqueue(pointToAdd);
-                }
-
-                pointToAdd = new System.Windows.Point(p.X, p.Y + 1);
-                nbColor = paintBitmap.GetColor((int)p.X, (int)p.Y + 1);
-                if (equalColor(nbColor, originalColor))
-                {
-                    queue.Enqueue(pointToAdd);
+                    pointToAdd = new System.Windows.Point(p.X, p.Y + 1);
+                        queue.Enqueue(pointToAdd);
                 }
             }
 

@@ -57,6 +57,9 @@ namespace DrawingPaint
         System.Windows.Point point1;
         System.Windows.Point point2;
 
+        System.Windows.Point firstPoint;
+        bool isFirstPoint = true;
+
         bool whichToDraw = true;
 
         Drawer drawer;
@@ -117,19 +120,46 @@ namespace DrawingPaint
 
             //int dy = y_max - y_min;
             //int dx = x_max - x_min;
-            int dy = y_max - y_min;
-            int dx = x_max - x_min;
+
+            /*
+            bool steep = Math.Abs(y2 - y1) > Math.Abs(x2 - x1);
+            if (steep)
+            {
+                int tmpX1 = x1;
+                x1 = y1;
+                y1 = tmpX1;
+
+                int tmpX2 = x2;
+                x2 = y2;
+                y2 = tmpX2;
+            }
+            */
+
+            if (y1 > y2)
+            {
+                int tmpX1 = x1;
+                x1 = x2;
+                x2 = tmpX1;
+
+                int tmpY1 = y1;
+                y1 = y2;
+                y2 = tmpY1;
+            }
+
+            int dy = y2 - y1;
+            int dx = x2 - x1;
+
             double m = (double) dy/dx;
 
-            Edge edge = new Edge(y_max, y_min, m);
+            Edge edge = new Edge(y2, y1, m);
 
-            edge.curr_x = x_min;
-            
+            edge.curr_x = x1;
+            /*
             if (y_min == y1)
                 edge.curr_x = x1;
             else
                 edge.curr_x = x2;
-            
+            */
             polygon.Add(edge);
         }
 
@@ -146,6 +176,8 @@ namespace DrawingPaint
 
         private void fillButton_Click(object sender, RoutedEventArgs e)
         {
+            drawLine(firstPoint, point2);
+
             ScanlineFilling filler = new ScanlineFilling(paintBitmap.PutPixel);
 
             filler.Fill(polygon);
@@ -178,6 +210,11 @@ namespace DrawingPaint
             else 
             { 
                 point1 = e.GetPosition(e.Source as FrameworkElement);
+                if (isFirstPoint) 
+                {
+                    firstPoint = point1;
+                    isFirstPoint = false;
+                }
                 //paintBitmap.PutPixel((int)point1.X, (int)point1.Y);
                 //System.Drawing.Color c = paintBitmap.GetColor((int)point1.X, (int)point1.Y);
                 //MessageBox.Show("R: " + c.R + " G: " + c.G + " B: " + c.B);
@@ -189,8 +226,8 @@ namespace DrawingPaint
 
         private void automatonImage_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            
-            System.Windows.Point point2 = e.GetPosition(e.Source as FrameworkElement);
+            point2 = e.GetPosition(e.Source as FrameworkElement);
+
             //MessageBox.Show("X: " + point2.X + " Y: " + point2.Y);
             if (point1 != null)
             {
