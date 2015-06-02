@@ -6,7 +6,8 @@
         WindowStyle="None" BorderThickness="1"
         ResizeMode="CanResizeWithGrip"
         AllowsTransparency="True"
-        Background="#FF2C2C2C">
+        Background="#FF2C2C2C"
+        KeyUp="paintImage_KeyUp">
 
     <Window.Resources>
         <SolidColorBrush x:Key="ComponentBorderColor" Color="#FFD6711C" />
@@ -443,7 +444,9 @@
                            MouseLeftButtonUp="automatonImage_MouseLeftButtonUp"
                            MouseMove="automatonImage_MouseMove"
                            MouseRightButtonUp="automatonImage_MouseRightButtonUp"
-                           MouseWheel="image_MouseWheel" MouseDown="automatonImage_MouseDown" MouseUp="automatonImage_MouseUp" >
+                           MouseWheel="image_MouseWheel" MouseDown="automatonImage_MouseDown" MouseUp="automatonImage_MouseUp"
+                           
+                           >
                     </Image>
                 </ScrollViewer>
             </Grid>
@@ -494,6 +497,8 @@
                             <ComboBoxItem >7</ComboBoxItem>
                         </ComboBox>
                         <Button x:Name="floodFillButton" Content="Flood Fill" HorizontalAlignment="Left" Margin="10,199,0,0" VerticalAlignment="Top" Width="59" Click="floodFillButton_Click"/>
+                        
+                        <Button x:Name="project3D" Content="Project 3D cube" HorizontalAlignment="Left" Margin="134,151,0,0" VerticalAlignment="Top" Width="104" Click="project3D_Click"/>
 
                     </Grid>
 

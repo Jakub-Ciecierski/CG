@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="3D\Cube.cs" />
+    <Compile Include="3D\Projection.cs" />
     <Compile Include="Filling\Edge.cs" />
     <Compile Include="Filling\ScanlineFilling.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

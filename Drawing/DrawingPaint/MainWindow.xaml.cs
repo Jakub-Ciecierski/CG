@@ -1,4 +1,5 @@
 ﻿using Drawing;
+using Drawing._3D;
 using Drawing.Filling;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,8 @@ namespace DrawingPaint
 
         bool doFloodFill = false;
         FloodFill floodFiller;
+
+        Projection projection;
 
         public MainWindow()
         {
@@ -370,6 +373,174 @@ namespace DrawingPaint
         private void minimizeButton_Click(object sender, RoutedEventArgs e)
         {
             SystemCommands.MinimizeWindow(this);
+        }
+
+        private void render3D() 
+        {
+            Cube cube = new Cube();
+
+            double[][] cube_points = projection.Render(cube);
+            int size = cube_points.Length;
+            int x1, y1, x2, y2;
+
+            x1 = (int)cube_points[0][0];
+            y1 = (int)cube_points[0][1];
+
+            x2 = (int)cube_points[1][0];
+            y2 = (int)cube_points[1][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+            x1 = (int)cube_points[1][0];
+            y1 = (int)cube_points[1][1];
+
+            x2 = (int)cube_points[2][0];
+            y2 = (int)cube_points[2][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+
+            x1 = (int)cube_points[2][0];
+            y1 = (int)cube_points[2][1];
+
+            x2 = (int)cube_points[3][0];
+            y2 = (int)cube_points[3][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+
+            x1 = (int)cube_points[3][0];
+            y1 = (int)cube_points[3][1];
+
+            x2 = (int)cube_points[0][0];
+            y2 = (int)cube_points[0][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+
+
+
+
+
+
+
+
+
+
+
+            x1 = (int)cube_points[4][0];
+            y1 = (int)cube_points[4][1];
+
+            x2 = (int)cube_points[5][0];
+            y2 = (int)cube_points[5][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+            x1 = (int)cube_points[5][0];
+            y1 = (int)cube_points[5][1];
+
+            x2 = (int)cube_points[6][0];
+            y2 = (int)cube_points[6][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+
+            x1 = (int)cube_points[6][0];
+            y1 = (int)cube_points[6][1];
+
+            x2 = (int)cube_points[7][0];
+            y2 = (int)cube_points[7][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+
+            x1 = (int)cube_points[7][0];
+            y1 = (int)cube_points[7][1];
+
+            x2 = (int)cube_points[4][0];
+            y2 = (int)cube_points[4][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+
+
+
+
+
+
+
+            x1 = (int)cube_points[0][0];
+            y1 = (int)cube_points[0][1];
+
+            x2 = (int)cube_points[4][0];
+            y2 = (int)cube_points[4][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+
+
+            x1 = (int)cube_points[1][0];
+            y1 = (int)cube_points[1][1];
+
+            x2 = (int)cube_points[5][0];
+            y2 = (int)cube_points[5][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+
+
+
+            x1 = (int)cube_points[3][0];
+            y1 = (int)cube_points[3][1];
+
+            x2 = (int)cube_points[7][0];
+            y2 = (int)cube_points[7][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+
+
+
+            x1 = (int)cube_points[2][0];
+            y1 = (int)cube_points[2][1];
+
+            x2 = (int)cube_points[6][0];
+            y2 = (int)cube_points[6][1];
+
+            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+        }
+
+        private void project3D_Click(object sender, RoutedEventArgs e)
+        {
+            projection = new Projection(gridWidth, gridHeight);
+
+            render3D();
+           
+
+        }
+
+        private void paintImage_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Left) 
+            {
+                projection.Alpha -= 10;
+            }
+
+            if (e.Key == Key.Right)
+            {
+                projection.Alpha += 10;
+            }
+            projection.Update();
+            render3D();
         }
 
     }
