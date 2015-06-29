@@ -1,5 +1,5 @@
 ﻿using Drawing;
-using Drawing._3D;
+using Drawing.GFX.Shapes;
 using Drawing.Filling;
 using System;
 using System.Collections.Generic;
@@ -21,6 +21,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Drawing.GFX;
 
 namespace DrawingPaint
 {
@@ -42,7 +43,7 @@ namespace DrawingPaint
         System.Windows.Point middleDragStartPoint;
 
         int gridWidth = 1000;
-        int gridHeight = 1000;
+        int gridHeight = 750;
 
         const int MAX_WIDTH = 500;
         const int MAX_HEIGHT = 500;
@@ -70,7 +71,25 @@ namespace DrawingPaint
         bool doFloodFill = false;
         FloodFill floodFiller;
 
-        Projection projection;
+        /***************************/
+        /******* 3D RENDERING ******/
+        /***************************/
+
+        Renderer renderer;
+
+        Camera camera;
+
+        bool startRendering = false;
+
+        bool cameraStyle = true;
+
+        bool isLeftClickHold = false;
+
+        System.Windows.Point leftDragStart;
+
+        DispatcherTimer gameLoop = new DispatcherTimer();
+
+        int speed = 60;
 
         public MainWindow()
         {
@@ -79,12 +98,21 @@ namespace DrawingPaint
 
             floodFiller = new FloodFill(paintBitmap, paintBitmap.PutPixel);
 
-            drawer = new Drawer(1);
+            drawer = new Drawer(1, paintBitmap.PutPixel);
+
+            //initGameLoopDisp();
+        }
+
+        private void initGameLoopDisp()
+        {
+            gameLoop = new DispatcherTimer();
+            gameLoop.Tick += new EventHandler(gameLoop_Tick);
+            gameLoop.Interval = new TimeSpan(0, 0, 0, 0, speed);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            //init3DRendering();
         }
 
         /*******************************************************************/
@@ -152,7 +180,7 @@ namespace DrawingPaint
             int dy = y2 - y1;
             int dx = x2 - x1;
 
-            double m = (double) dy/dx;
+            double m = (double)dy / dx;
 
             Edge edge = new Edge(y2, y1, m);
 
@@ -202,63 +230,81 @@ namespace DrawingPaint
 
         private void automatonImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (doFloodFill)
+            if (!cameraStyle)
             {
-                System.Windows.Point point = e.GetPosition(e.Source as FrameworkElement);
-                int x = (int)point.X;
-                int y = (int)point.Y;
-
-                floodFiller.Fill(x, y, paintBitmap.GetColor(x,y), paintBitmap.BRUSH_COLOR);
-            }
-            else 
-            { 
-                point1 = e.GetPosition(e.Source as FrameworkElement);
-                if (isFirstPoint) 
+                if (doFloodFill)
                 {
-                    firstPoint = point1;
-                    isFirstPoint = false;
+                    System.Windows.Point point = e.GetPosition(e.Source as FrameworkElement);
+                    int x = (int)point.X;
+                    int y = (int)point.Y;
+
+                    floodFiller.Fill(x, y, paintBitmap.GetColor(x, y), paintBitmap.BRUSH_COLOR);
                 }
-                //paintBitmap.PutPixel((int)point1.X, (int)point1.Y);
-                //System.Drawing.Color c = paintBitmap.GetColor((int)point1.X, (int)point1.Y);
-                //MessageBox.Show("R: " + c.R + " G: " + c.G + " B: " + c.B);
-                //paintBitmap.PutPixel((int)point1.X, (int)point1.Y);
-                //MessageBox.Show("X: " + point1.X + " Y: " + point1.Y);
+                else
+                {
+                    point1 = e.GetPosition(e.Source as FrameworkElement);
+                    if (isFirstPoint)
+                    {
+                        firstPoint = point1;
+                        isFirstPoint = false;
+                    }
+                }
+            }
+            else
+            {
+                isLeftClickHold = false;
+            }
+        }
+
+        private void paintImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!cameraStyle)
+            {
+
+            }
+            else
+            {
+                isLeftClickHold = true;
+                leftDragStart = e.GetPosition(e.Source as FrameworkElement);
+                Console.Write("******************** Mouse started dragging ********************\n");
             }
         }
 
 
         private void automatonImage_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            point2 = e.GetPosition(e.Source as FrameworkElement);
-
-            //MessageBox.Show("X: " + point2.X + " Y: " + point2.Y);
-            if (point1 != null)
+            if (!cameraStyle)
             {
-                if (whichToDraw)
-                    drawLine(point1, point2);
-                else
-                    drawCircle(point1, point2);
+                point2 = e.GetPosition(e.Source as FrameworkElement);
 
-                point1 = point2;
-                /*
-                new Thread(() =>
+                if (point1 != null)
                 {
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                    if (whichToDraw)
+                        drawLine(point1, point2);
+                    else
+                        drawCircle(point1, point2);
+
+                    point1 = point2;
+                    /*
+                    new Thread(() =>
                     {
-                        if (whichToDraw)
-                            drawLine(point1, point2);
-                        else
-                            drawCircle(point1, point2);
-                    }));
-                }).Start();
-                */
+                        Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                        {
+                            if (whichToDraw)
+                                drawLine(point1, point2);
+                            else
+                                drawCircle(point1, point2);
+                        }));
+                    }).Start();
+                    */
+                }
             }
         }
 
 
 
         /*******************************************************************/
-        /************************* MIDDLE MOUSE ****************************/
+        /************************* DRAG MOUSE ******************************/
         /*******************************************************************/
 
         private void automatonImage_MouseMove(object sender, MouseEventArgs e)
@@ -276,7 +322,38 @@ namespace DrawingPaint
                 gridScollViewer.ScrollToHorizontalOffset(gridScollViewer.HorizontalOffset + deltaX * middleDragFactor);
                 gridScollViewer.ScrollToVerticalOffset(gridScollViewer.VerticalOffset + deltaY * middleDragFactor);
             }
+
+            // 3D transition
+            if (isLeftClickHold)
+            {
+                double deltaX;
+                double deltaY;
+
+                deltaX = leftDragStart.X - point.X;
+                deltaY = leftDragStart.Y - point.Y;
+
+                if (camera != null)
+                {
+                    if (Math.Abs(deltaX) > 0.0)
+                    {
+                        if (deltaX >= 0)
+                            camera.Alpha -= camera.CameraSensitivity;
+                        else
+                            camera.Alpha += camera.CameraSensitivity;
+                    }
+                    if (Math.Abs(deltaY) > 0.0)
+                    {
+                        if (deltaY >= 0)
+                            camera.Beta += camera.CameraSensitivity;
+                        else
+                            camera.Beta -= camera.CameraSensitivity;
+                    }
+                }
+
+                leftDragStart = e.GetPosition(e.Source as FrameworkElement);
+            }
         }
+
 
         private void automatonImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -306,9 +383,10 @@ namespace DrawingPaint
             {
                 zoomValue -= zoomFactor;
             }
-
+            /* // DISABLED, UNDEFINED FOR 3D
             if (!paintBitmap.ScaleImage(zoomValue))
                 zoomValue = lastZoomValue;
+            */
         }
 
 
@@ -375,173 +453,100 @@ namespace DrawingPaint
             SystemCommands.MinimizeWindow(this);
         }
 
-        private void render3D() 
+        private void windowDropFileHandler(object sender, DragEventArgs e)
         {
-            Cube cube = new Cube();
-
-            double[][] cube_points = projection.Render(cube);
-            int size = cube_points.Length;
-            int x1, y1, x2, y2;
-
-            x1 = (int)cube_points[0][0];
-            y1 = (int)cube_points[0][1];
-
-            x2 = (int)cube_points[1][0];
-            y2 = (int)cube_points[1][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-            x1 = (int)cube_points[1][0];
-            y1 = (int)cube_points[1][1];
-
-            x2 = (int)cube_points[2][0];
-            y2 = (int)cube_points[2][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-
-            x1 = (int)cube_points[2][0];
-            y1 = (int)cube_points[2][1];
-
-            x2 = (int)cube_points[3][0];
-            y2 = (int)cube_points[3][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-
-            x1 = (int)cube_points[3][0];
-            y1 = (int)cube_points[3][1];
-
-            x2 = (int)cube_points[0][0];
-            y2 = (int)cube_points[0][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-
-
-
-
-
-
-
-
-
-
-
-            x1 = (int)cube_points[4][0];
-            y1 = (int)cube_points[4][1];
-
-            x2 = (int)cube_points[5][0];
-            y2 = (int)cube_points[5][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-            x1 = (int)cube_points[5][0];
-            y1 = (int)cube_points[5][1];
-
-            x2 = (int)cube_points[6][0];
-            y2 = (int)cube_points[6][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-
-            x1 = (int)cube_points[6][0];
-            y1 = (int)cube_points[6][1];
-
-            x2 = (int)cube_points[7][0];
-            y2 = (int)cube_points[7][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-
-            x1 = (int)cube_points[7][0];
-            y1 = (int)cube_points[7][1];
-
-            x2 = (int)cube_points[4][0];
-            y2 = (int)cube_points[4][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-
-
-
-
-
-
-
-            x1 = (int)cube_points[0][0];
-            y1 = (int)cube_points[0][1];
-
-            x2 = (int)cube_points[4][0];
-            y2 = (int)cube_points[4][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-
-
-            x1 = (int)cube_points[1][0];
-            y1 = (int)cube_points[1][1];
-
-            x2 = (int)cube_points[5][0];
-            y2 = (int)cube_points[5][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-
-
-
-            x1 = (int)cube_points[3][0];
-            y1 = (int)cube_points[3][1];
-
-            x2 = (int)cube_points[7][0];
-            y2 = (int)cube_points[7][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
-
-
-
-            x1 = (int)cube_points[2][0];
-            y1 = (int)cube_points[2][1];
-
-            x2 = (int)cube_points[6][0];
-            y2 = (int)cube_points[6][1];
-
-            drawer.DrawSymmetricLine(x1, y1, x2, y2, paintBitmap.PutPixel);
+            string[] filenames = (string[])e.Data.GetData(DataFormats.FileDrop, true);
+            loadScene(filenames[0]);
+        }
+
+        /***************************************************/
+        /**************** RENDERING 3D *********************/
+        /***************************************************/
+
+        private void loadScene(string filename)
+        {
+            List<Drawing.GFX.Shape> scene = SceneLoader.LoadScene(filename);
+            init3DRendering(scene);
+        }
+
+        private void init3DRendering(List<Drawing.GFX.Shape> scene)
+        {
+            camera = new Camera(gridWidth, gridHeight);
+
+            renderer = new Renderer(camera);
+
+            foreach (Drawing.GFX.Shape shape in scene)
+            {
+                shape.drawer = drawer;
+                renderer.AddShape(shape);
+            }
+
+            initGameLoopDisp();
+
+            gameLoop.Start();
+            startRendering = true;
+        }
+
+        private void gameLoop_Tick(object sender, EventArgs e)
+        {
+            if (startRendering)
+            {
+                renderWindow();
+            }
         }
 
         private void project3D_Click(object sender, RoutedEventArgs e)
         {
-            projection = new Projection(gridWidth, gridHeight);
-
-            render3D();
-           
-
+            //init3DRendering();
         }
 
         private void paintImage_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Left) 
+        }
+
+        private void paintImage_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.W)
             {
-                projection.Alpha -= 10;
+                camera.Z -= camera.MovementSensitivity;
             }
 
-            if (e.Key == Key.Right)
+            if (e.Key == Key.S)
             {
-                projection.Alpha += 10;
+                camera.Z += camera.MovementSensitivity;
             }
-            projection.Update();
-            render3D();
+
+            if (e.Key == Key.A)
+            {
+                camera.X -= camera.MovementSensitivity;
+            }
+
+            if (e.Key == Key.D)
+            {
+                camera.X += camera.MovementSensitivity;
+            }
+
+            if (e.Key == Key.NumPad4)
+                camera.Alpha -= camera.CameraSensitivity / camera.MovementSensitivity;
+            if (e.Key == Key.NumPad6)
+                camera.Alpha += camera.CameraSensitivity / camera.MovementSensitivity;
+
+            if (e.Key == Key.NumPad8)
+                camera.Beta += camera.CameraSensitivity / camera.MovementSensitivity;
+            if (e.Key == Key.NumPad2)
+                camera.Beta -= camera.CameraSensitivity / camera.MovementSensitivity;
+
+            renderWindow();
         }
+
+        private void renderWindow()
+        {
+            paintBitmap.RefreshBitmap();
+
+            camera.Update();
+            renderer.Render();
+        }
+
 
     }
 }

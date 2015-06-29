@@ -1,0 +1,15 @@
+SHAPE
+CUBE
+WIDTH
+2.0
+X
+0
+Y
+0
+Z
+0
+ALPHA
+20
+BETA
+50
+EOF

@@ -2,12 +2,15 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         AllowDrop="True"
-        Title="MainWindow" Height="650" Width="859" Loaded="Window_Loaded"
+        Title="MainWindow" Height="950" Width="1300" Loaded="Window_Loaded"
         WindowStyle="None" BorderThickness="1"
         ResizeMode="CanResizeWithGrip"
         AllowsTransparency="True"
         Background="#FF2C2C2C"
-        KeyUp="paintImage_KeyUp">
+        KeyUp="paintImage_KeyUp"
+        KeyDown="paintImage_KeyDown"
+        Drop="windowDropFileHandler"
+        >
 
     <Window.Resources>
         <SolidColorBrush x:Key="ComponentBorderColor" Color="#FFD6711C" />
@@ -444,7 +447,7 @@
                            MouseLeftButtonUp="automatonImage_MouseLeftButtonUp"
                            MouseMove="automatonImage_MouseMove"
                            MouseRightButtonUp="automatonImage_MouseRightButtonUp"
-                           MouseWheel="image_MouseWheel" MouseDown="automatonImage_MouseDown" MouseUp="automatonImage_MouseUp"
+                           MouseWheel="image_MouseWheel" MouseDown="automatonImage_MouseDown" MouseUp="automatonImage_MouseUp" MouseLeftButtonDown="paintImage_MouseLeftButtonDown"
                            
                            >
                     </Image>

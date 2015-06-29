@@ -26,9 +26,11 @@ namespace DrawingPaint
         /// </summary>
         private System.Drawing.Color NEST_COLOR = System.Drawing.Color.FromArgb(200, 20, 20);
 
-        public System.Drawing.Color BACKGROUND_COLOR = System.Drawing.Color.FromArgb(255, 255, 255);
+        //public System.Drawing.Color BACKGROUND_COLOR = System.Drawing.Color.FromArgb(255, 255, 255);
+        public System.Drawing.Color BACKGROUND_COLOR = System.Drawing.Color.FromArgb(0, 0, 0);
 
-        public System.Drawing.Color BRUSH_COLOR = System.Drawing.Color.FromArgb(0, 0, 0);
+        //public System.Drawing.Color BRUSH_COLOR = System.Drawing.Color.FromArgb(0, 0, 0);
+        public System.Drawing.Color BRUSH_COLOR = System.Drawing.Color.FromArgb(0, 255, 0);
 
         /// <summary>
         ///     Dimensions of a cell in pixels
@@ -96,7 +98,7 @@ namespace DrawingPaint
         private void init()
         {
             initBitmap();
-            renderBitmap();
+            RefreshBitmap();
         }
 
         private unsafe void initBitmap()
@@ -115,8 +117,10 @@ namespace DrawingPaint
             bytesPerPixel = (wBitmap.Format.BitsPerPixel) / 8;
         }
 
-        private unsafe void renderBitmap()
+        public unsafe void RefreshBitmap()
         {
+            wBitmap.Clear();
+            /*
             wBitmap.Lock();
             byte* pImgData = (byte*)wBitmap.BackBuffer;
 
@@ -140,6 +144,7 @@ namespace DrawingPaint
             Int32Rect rect = new Int32Rect(0, 0, widthPixels, heightPixels);
             wBitmap.AddDirtyRect(rect);
             wBitmap.Unlock();
+             * */
         }
 
         /*******************************************************************/
@@ -179,6 +184,9 @@ namespace DrawingPaint
 
         public unsafe void PutPixel(int i, int j)
         {
+            if (i < 0 || j < 0 || i >= widthPixels || j >= heightPixels)
+                return;
+ 
             int width = wBitmap.PixelWidth;
             int height = wBitmap.PixelHeight;
 
@@ -221,6 +229,9 @@ namespace DrawingPaint
 
         public unsafe void PutPixel(int i, int j, System.Drawing.Color c)
         {
+            if (i < 0 || j < 0 || i >= widthPixels || j >= heightPixels)
+                return;
+
             int width = wBitmap.PixelWidth;
             int height = wBitmap.PixelHeight;
 

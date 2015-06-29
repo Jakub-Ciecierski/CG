@@ -39,10 +39,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="3D\Cube.cs" />
-    <Compile Include="3D\Projection.cs" />
+    <Compile Include="GFX\Camera.cs" />
+    <Compile Include="GFX\Renderer.cs" />
+    <Compile Include="GFX\Shapes\Cone.cs" />
+    <Compile Include="GFX\Shapes\Cube.cs" />
     <Compile Include="Filling\Edge.cs" />
     <Compile Include="Filling\ScanlineFilling.cs" />
+    <Compile Include="GFX\Shapes\Cylinder.cs" />
+    <Compile Include="GFX\Shape.cs" />
+    <Compile Include="GFX\Shapes\Sphere.cs" />
+    <Compile Include="SimpleMath\Matrix.cs" />
+    <Compile Include="SimpleMath\MM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drawer.cs" />
   </ItemGroup>

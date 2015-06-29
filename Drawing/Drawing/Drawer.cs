@@ -8,6 +8,8 @@ namespace Drawing
 {
     public class Drawer
     {
+        private Action<int, int> putPixel;
+
         private int thickness;
 
         public int Thickness
@@ -18,6 +20,12 @@ namespace Drawing
 
         public Drawer(int thickness)
         {
+            Thickness = thickness;
+        }
+
+        public Drawer(int thickness, Action<int, int> putPixel)
+        {
+            this.putPixel = putPixel;
             Thickness = thickness;
         }
 
@@ -61,6 +69,81 @@ namespace Drawing
             int ystep = (y1 < y2) ? 1 : -1;
 
             if(steep)
+            {
+                putThickPixel(yf, xf, putPixel);
+                putThickPixel(yb, xb, putPixel);
+            }
+            else
+            {
+                putThickPixel(xf, yf, putPixel);
+                putThickPixel(xb, yb, putPixel);
+            }
+
+            while (xf < xb)
+            {
+                ++xf;
+                --xb;
+                if (d < 0)
+                    d += dE;
+                else
+                {
+                    d += dNE;
+                    yf += ystep;
+                    yb -= ystep;
+                }
+                if (steep)
+                {
+                    putThickPixel(yf, xf, putPixel);
+                    putThickPixel(yb, xb, putPixel);
+                }
+                else
+                {
+                    putThickPixel(xf, yf, putPixel);
+                    putThickPixel(xb, yb, putPixel);
+                }
+            }
+        }
+
+        public void DrawSymmetricLine(int x1, int y1, int x2, int y2)
+        {
+            // if the line too steep, "kick" the plane around
+            bool steep = Math.Abs(y2 - y1) > Math.Abs(x2 - x1);
+            if (steep)
+            {
+                int tmpX1 = x1;
+                x1 = y1;
+                y1 = tmpX1;
+
+                int tmpX2 = x2;
+                x2 = y2;
+                y2 = tmpX2;
+            }
+            // if x1 is greater than x2, the starting point
+            if (x1 > x2)
+            {
+                int tmpX1 = x1;
+                x1 = x2;
+                x2 = tmpX1;
+
+                int tmpY1 = y1;
+                y1 = y2;
+                y2 = tmpY1;
+            }
+
+            int dx = x2 - x1;
+            int dy = Math.Abs(y2 - y1);
+
+            int d = 2 * dy - dx;
+            int dE = 2 * dy;
+            int dNE = 2 * (dy - dx);
+
+            // front and back
+            int xf = x1, yf = y1;
+            int xb = x2, yb = y2;
+
+            int ystep = (y1 < y2) ? 1 : -1;
+
+            if (steep)
             {
                 putThickPixel(yf, xf, putPixel);
                 putThickPixel(yb, xb, putPixel);

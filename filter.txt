@@ -1,0 +1,99 @@
+ Bitmap filteredImage = (Bitmap)image.Clone();
+
+            unsafe
+            {
+                BitmapData originalImageData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, image.PixelFormat);
+                BitmapData filteredImageData = filteredImage.LockBits(new Rectangle(0, 0, filteredImage.Width, filteredImage.Height), ImageLockMode.ReadWrite, filteredImage.PixelFormat);
+
+                int bytesPerPixel = System.Drawing.Bitmap.GetPixelFormatSize(image.PixelFormat) / 8;
+                int heightInPixels = originalImageData.Height;
+                int widthInBytes = originalImageData.Width * bytesPerPixel;
+                byte* ptrFirstPixel = (byte*)originalImageData.Scan0;
+
+                for (int i = 0; i < heightInPixels; i++)
+                {
+                    byte* currentLine = ptrFirstPixel + (i * originalImageData.Stride);
+
+                    for (int j = 0; j < widthInBytes; j++)
+                    {
+                        int oldBlue = currentLine[j];
+                        int oldGreen = currentLine[j + 1];
+                        int oldRead = currentLine[j + 2];
+
+                        int newRead = 0;
+                        int newGreen = 0;
+                        int newBlue = 0;
+
+                        for (int k = -1; k <= 1; k++)
+                        {
+                            for (int l = -1; l <= 1; l++)
+                            {
+                                Color currentColor;
+
+                                currentLine = ptrFirstPixel + ((i+k) * originalImageData.Stride);
+                                int kernelBlue = 0;
+                                int kernelGreen = 0;
+                                int kernelRead = 0;
+                                try{
+                                kernelBlue = currentLine[j + l];
+                                kernelGreen = currentLine[j + 1 + l];
+                                kernelRead = currentLine[j + 2 + l];
+                                }catch(Exception e){Console.Write( e.Message);}
+                                int readValue;
+                                int greenValue;
+                                int blueValue;
+                                readValue = (kernelRead * getKernelPoint(k, l));
+                                greenValue = (kernelGreen * getKernelPoint(k, l));
+                                blueValue = (kernelBlue * getKernelPoint(k, l));
+                                /*
+                                try
+                                {
+                                    currentColor = image.GetPixel(i + k, j + l);
+
+                                    readValue = (kernelRead * getKernelPoint(k, l));
+                                    greenValue = (kernelGreen * getKernelPoint(k, l));
+                                    blueValue = (kernelBlue * getKernelPoint(k, l));
+                                }
+                                catch (ArgumentOutOfRangeException e)
+                                {
+                                    readValue = 0;
+                                    greenValue = 0;
+                                    blueValue = 0;
+                                }*/
+
+                                newRead += readValue;
+                                newGreen += greenValue;
+                                newBlue += blueValue;
+                            }
+                        }
+
+                        newRead = (newRead / devisor) + offset;
+                        newGreen = (newGreen / devisor) + offset;
+                        newBlue = (newBlue / devisor) + offset;
+
+                        if (newRead < 0) newRead = 0;
+                        if (newRead > 255) newRead = 255;
+                        if (newGreen < 0) newGreen = 0;
+                        if (newGreen > 255) newGreen = 255;
+                        if (newBlue < 0) newBlue = 0;
+                        if (newBlue > 255) newBlue = 255;
+
+                        if (newRead < 0 || newRead > 255 || newGreen < 0 || newGreen > 255 || newBlue < 0 || newBlue > 255)
+                        {
+                            throw new ArithmeticException("byte out of bound");
+                        }
+
+                        currentLine = ptrFirstPixel + (i * filteredImageData.Stride);
+                        currentLine[j] = (byte)newBlue;
+                        currentLine[j + 1] = (byte)newGreen;
+                        currentLine[j + 2] = (byte)newRead;
+
+                        //Color newColor = Color.FromArgb(color.A, (byte)newRead, (byte)newGreen, (byte)newBlue);
+
+                        //filteredImage.SetPixel(i, j, newColor);
+                    }
+                }
+                image.UnlockBits(originalImageData);
+                filteredImage.UnlockBits(originalImageData);
+            }
+            return filteredImage;
